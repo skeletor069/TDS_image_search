@@ -5,4 +5,12 @@
     <string name="tab_text_3">Tab 3</string>
     <string name="action_settings">Settings</string>
     <string name="section_format">Hello World from section: %1$d</string>
+
+    <string name="label_search">Geben Sie den Suchbegriff ein</string>
+    <string name="label_options">Wählen Sie die Suchmaschine</string>
+    <string name="search_btn">SEARCH</string>
+    <string name="google">Google</string>
+    <string name="flickr">Flickr</string>
+    <string name="getty">Getty Images</string>
+
 </resources>
