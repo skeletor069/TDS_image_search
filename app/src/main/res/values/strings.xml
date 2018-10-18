@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Image Search</string>
+    <string name="app_name">Bildersuche</string>
     <string name="tab_text_1">SUCHE</string>
     <string name="tab_text_2">FAVORITEN</string>
     <string name="tab_text_3">Tab 3</string>
@@ -12,5 +12,7 @@
     <string name="google">Google</string>
     <string name="flickr">Flickr</string>
     <string name="getty">Getty Images</string>
+
+    <string name="search_empty_warning">Please enter something in the search box.</string>
 
 </resources>
