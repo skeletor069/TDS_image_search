@@ -35,6 +35,7 @@ public class Flickr {
     StringRequest stringRequest;
     JSONArray photoList = new JSONArray();
     String TAG = "FLICKR";
+    MyGridAdapter gridAdapter;
 
     public Flickr(Context context, LayoutInflater inflater, GridView gridView){
         this.context = context;
@@ -47,6 +48,14 @@ public class Flickr {
     public void Search(String searchKey){
         String searchUrl = GetRequestUrl(searchKey);
         SendStringRequest(searchUrl);
+    }
+
+    public Object GetObjectAtPosition(int position){
+        return gridAdapter.getItem(position);
+    }
+
+    public String GetOriginalImgUrl(Object jsonObject) {
+        return GetImageUrl((JSONObject) jsonObject, "_b");
     }
 
     String GetRequestUrl(String searchKey){
@@ -72,7 +81,8 @@ public class Flickr {
                         try {
                             JSONObject jsonObject = new JSONObject(jsonPart);
                             photoList = new JSONArray(((JSONObject)jsonObject.get("photos")).getString("photo"));
-                            gridView.setAdapter(new MyGridAdapter());
+                            gridAdapter = new MyGridAdapter();
+                            gridView.setAdapter(gridAdapter);
                             Log.d(TAG, "onResponse: photo count " + photoList.length());
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -133,27 +143,27 @@ public class Flickr {
         }
     }
 
-    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
-        ImageView bmImage;
-        public DownloadImageTask(ImageView bmImage) {
-            this.bmImage = bmImage;
-        }
-
-        protected Bitmap doInBackground(String... urls) {
-            String urldisplay = urls[0];
-            Bitmap bmp = null;
-            try {
-                InputStream in = new java.net.URL(urldisplay).openStream();
-                bmp = BitmapFactory.decodeStream(in);
-            } catch (Exception e) {
-                Log.e("Error", e.getMessage());
-                e.printStackTrace();
-            }
-            return bmp;
-        }
-        protected void onPostExecute(Bitmap result) {
-            bmImage.setImageBitmap(result);
-        }
-    }
+//    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+//        ImageView bmImage;
+//        public DownloadImageTask(ImageView bmImage) {
+//            this.bmImage = bmImage;
+//        }
+//
+//        protected Bitmap doInBackground(String... urls) {
+//            String urldisplay = urls[0];
+//            Bitmap bmp = null;
+//            try {
+//                InputStream in = new java.net.URL(urldisplay).openStream();
+//                bmp = BitmapFactory.decodeStream(in);
+//            } catch (Exception e) {
+//                Log.e("Error", e.getMessage());
+//                e.printStackTrace();
+//            }
+//            return bmp;
+//        }
+//        protected void onPostExecute(Bitmap result) {
+//            bmImage.setImageBitmap(result);
+//        }
+//    }
 
 }

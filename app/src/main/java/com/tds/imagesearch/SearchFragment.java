@@ -2,15 +2,19 @@ package com.tds.imagesearch;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.Toast;
 
@@ -40,9 +44,19 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
         searchBtn.setOnClickListener(this);
         flickrSwitch.setChecked(true);
         gridView = (GridView) rootView.findViewById(R.id.gridView);
-        flickr = new Flickr(getActivity(), getLayoutInflater(), gridView);
+        flickr = new Flickr(getActivity(), inflater, gridView);
 
 
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                if(flickrSwitch.isChecked()){
+                    Object viewData = flickr.GetObjectAtPosition(position);
+                    Log.d(TAG, "onItemClick: " + viewData.toString());
+                    startActivity(new Intent(getActivity(), ViewImage.class).putExtra("imgUrl", flickr.GetOriginalImgUrl(viewData)));
+                }
+            }
+        });
         return rootView;
     }
 
