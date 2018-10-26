@@ -14,5 +14,7 @@
     <string name="getty">Getty Images</string>
 
     <string name="search_empty_warning">Please enter something in the search box.</string>
+    <string name="swith_warning">Please check the flickr option.</string>
+    <string name="general_error">"Sorry! Something went wrong."</string>
 
 </resources>

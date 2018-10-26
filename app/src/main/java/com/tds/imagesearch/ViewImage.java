@@ -1,9 +1,7 @@
 package com.tds.imagesearch;
 
-import android.provider.ContactsContract;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -36,7 +34,7 @@ public class ViewImage extends AppCompatActivity implements View.OnClickListener
 
         } catch (JSONException e) {
             e.printStackTrace();
-            Toast.makeText(getApplicationContext(), "Sorry! Something went wrong.", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), getResources().getString(R.string.general_error), Toast.LENGTH_LONG).show();
         }
 
     }
@@ -44,26 +42,21 @@ public class ViewImage extends AppCompatActivity implements View.OnClickListener
     @Override
     public void onClick(View view) {
         if(view.getId()==R.id.favoriteBtn){
-            Log.d(TAG, "onClick: ");
             if(!DataManager.GetInstance().IsFavourite(imgJsonObj)){
                 DataManager.GetInstance().AddAsFavorite(imgJsonObj);
                 SetButtonStateFavorite();
-                Log.d(TAG, "onClick: set as favorite");
             }else{
                 DataManager.GetInstance().RemoveFromFavorite(imgJsonObj);
                 SetButtonStateNormal();
-                Log.d(TAG, "onClick: removed from favorite");
             }
         }
     }
 
     void SetButtonStateFavorite(){
-        Log.d(TAG, "SetButtonStateFavorite: ");
         favoriteBtn.setImageResource(R.drawable.ic_favorite_red_24dp);
     }
 
     void SetButtonStateNormal(){
-        Log.d(TAG, "SetButtonStateNormal: ");
         favoriteBtn.setImageResource(R.drawable.ic_favorite_border_red_24dp);
     }
 }

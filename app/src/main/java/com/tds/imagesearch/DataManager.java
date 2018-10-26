@@ -1,7 +1,6 @@
 package com.tds.imagesearch;
 
 import android.content.SharedPreferences;
-import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -11,7 +10,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-
 import java.util.ArrayList;
 
 public class DataManager {
@@ -19,11 +17,11 @@ public class DataManager {
     ArrayList<String> favoriteImages;
     SharedPreferences preferences;
     Gson gsonBuilder;
+    SharedPreferences.Editor editor;
 
     private DataManager(){
         favoriteImages = new ArrayList<String>();
         gsonBuilder = new GsonBuilder().create();
-        Log.d("ViewImage", "DataManager: Instantiated");
     }
 
     public static DataManager GetInstance(){
@@ -34,6 +32,7 @@ public class DataManager {
 
     public void Initialize(SharedPreferences preferences){
         this.preferences = preferences;
+        editor = preferences.edit();
         LoadFavoriteImages();
     }
 
@@ -47,13 +46,18 @@ public class DataManager {
     }
 
     public void AddAsFavorite(JSONObject imageObj){
-        if(!favoriteImages.contains(imageObj.toString()))
+        if(!favoriteImages.contains(imageObj.toString())) {
             favoriteImages.add(imageObj.toString());
+            editor.putString("favorite", new Gson().toJson(favoriteImages));
+            editor.commit();
+        }
     }
 
     public void RemoveFromFavorite(JSONObject imageObj){
         if(favoriteImages.contains(imageObj.toString())){
             favoriteImages.remove(imageObj.toString());
+            editor.putString("favorite", new Gson().toJson(favoriteImages));
+            editor.commit();
         }
     }
 

@@ -1,7 +1,6 @@
 package com.tds.imagesearch;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +20,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class Flickr {
-    //Context context;
     LayoutInflater inflater;
     GridView gridView;
     String apiKey = "766733a614a9c15a873ac2b130ef2db7";
@@ -32,7 +30,6 @@ public class Flickr {
     MyGridAdapter gridAdapter;
 
     public Flickr(Context context, LayoutInflater inflater, GridView gridView){
-        //this.context = context;
         this.inflater = inflater;
         this.gridView = gridView;
         queue = Volley.newRequestQueue(context);
@@ -44,7 +41,7 @@ public class Flickr {
         try {
             url = "https://farm"+object.getString("farm")+".staticflickr.com/"+object.getString("server")+"/"+object.getString("id")+"_"+object.getString("secret")+option+".jpg";
         } catch (JSONException e) {
-            //e.printStackTrace();
+            e.printStackTrace();
         }
         return url;
     }
@@ -60,7 +57,6 @@ public class Flickr {
 
     public void LoadFavorites(JSONArray favoriteImages){
         photoList = favoriteImages;
-        Log.d(TAG, "LoadFavorites: list length " + photoList.length() + " " + (gridView.getId() == R.id.gridViewFavorite));
         gridAdapter = new MyGridAdapter();
         gridView.setAdapter(gridAdapter);
     }
@@ -86,7 +82,6 @@ public class Flickr {
                             photoList = new JSONArray(((JSONObject)jsonObject.get("photos")).getString("photo"));
                             gridAdapter = new MyGridAdapter();
                             gridView.setAdapter(gridAdapter);
-                            Log.d(TAG, "onResponse: photo count " + photoList.length());
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -127,9 +122,7 @@ public class Flickr {
         public View getView(int position, View convertView, ViewGroup viewGroup) {
             convertView = inflater.inflate(R.layout.image_grid_item, viewGroup,  false);
             ImageView imageView = convertView.findViewById(R.id.imageView);
-            Log.d(TAG, "getView: downloading");
             if(getItem(position).getClass() == String.class) {
-                Log.d(TAG, "getView: is a string " + getItem(position));
                 try {
                     new DownloadImageTask(imageView).execute(GetImageUrl(new JSONObject((String) getItem(position)), "_s"));
                 } catch (JSONException e) {
