@@ -53,7 +53,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
                 if(flickrSwitch.isChecked()){
                     Object viewData = flickr.GetObjectAtPosition(position);
                     Log.d(TAG, "onItemClick: " + viewData.toString());
-                    startActivity(new Intent(getActivity(), ViewImage.class).putExtra("imgUrl", flickr.GetOriginalImgUrl(viewData)));
+                    startActivity(new Intent(getActivity(), ViewImage.class).putExtra("imgData", viewData.toString()));
                 }
             }
         });
