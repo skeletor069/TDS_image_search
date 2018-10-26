@@ -4,9 +4,11 @@ import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 
@@ -14,11 +16,13 @@ import java.util.ArrayList;
 
 public class DataManager {
     static DataManager instance = null;
-    ArrayList<String> favoriteImages = new ArrayList<String>();
+    ArrayList<String> favoriteImages;
     SharedPreferences preferences;
+    Gson gsonBuilder;
 
     private DataManager(){
-        //favoriteImages = new ArrayList<String>();
+        favoriteImages = new ArrayList<String>();
+        gsonBuilder = new GsonBuilder().create();
         Log.d("ViewImage", "DataManager: Instantiated");
     }
 
@@ -57,9 +61,27 @@ public class DataManager {
         return favoriteImages.contains(imageObj.toString());
     }
 
-//    public JSONArray GetFavoriteImages(){
-//        return favoriteImages;
-//    }
+    ArrayList<JSONObject> GetJSONObjectList(){
+        ArrayList<JSONObject> temp = new ArrayList<JSONObject>();
+        for(int i = 0 ; i < favoriteImages.size(); i++){
+            try {
+                temp.add(new JSONObject(favoriteImages.get(i)));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return temp;
+    }
+
+    public JSONArray GetFavoriteImages(){
+        try {
+            JSONArray temp = new JSONArray(gsonBuilder.toJson(favoriteImages));
+            return temp;
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
 
 }

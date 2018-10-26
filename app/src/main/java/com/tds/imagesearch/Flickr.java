@@ -21,7 +21,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class Flickr {
-    Context context;
+    //Context context;
     LayoutInflater inflater;
     GridView gridView;
     String apiKey = "766733a614a9c15a873ac2b130ef2db7";
@@ -32,7 +32,7 @@ public class Flickr {
     MyGridAdapter gridAdapter;
 
     public Flickr(Context context, LayoutInflater inflater, GridView gridView){
-        this.context = context;
+        //this.context = context;
         this.inflater = inflater;
         this.gridView = gridView;
         queue = Volley.newRequestQueue(context);
@@ -56,6 +56,13 @@ public class Flickr {
     public void Search(String searchKey){
         String searchUrl = GetRequestUrl(searchKey);
         SendStringRequest(searchUrl);
+    }
+
+    public void LoadFavorites(JSONArray favoriteImages){
+        photoList = favoriteImages;
+        Log.d(TAG, "LoadFavorites: list length " + photoList.length() + " " + (gridView.getId() == R.id.gridViewFavorite));
+        gridAdapter = new MyGridAdapter();
+        gridView.setAdapter(gridAdapter);
     }
 
     public Object GetObjectAtPosition(int position){
@@ -121,7 +128,15 @@ public class Flickr {
             convertView = inflater.inflate(R.layout.image_grid_item, viewGroup,  false);
             ImageView imageView = convertView.findViewById(R.id.imageView);
             Log.d(TAG, "getView: downloading");
-            new DownloadImageTask(imageView).execute(GetImageUrl((JSONObject) getItem(position), "_s"));
+            if(getItem(position).getClass() == String.class) {
+                Log.d(TAG, "getView: is a string " + getItem(position));
+                try {
+                    new DownloadImageTask(imageView).execute(GetImageUrl(new JSONObject((String) getItem(position)), "_s"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }else
+                new DownloadImageTask(imageView).execute(GetImageUrl((JSONObject) getItem(position), "_s"));
             return convertView;
         }
     }
