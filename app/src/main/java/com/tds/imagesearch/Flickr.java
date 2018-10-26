@@ -1,10 +1,6 @@
 package com.tds.imagesearch;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,8 +19,6 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.InputStream;
 
 public class Flickr {
     Context context;
@@ -45,6 +39,20 @@ public class Flickr {
 
     }
 
+    public static String GetImageUrl(JSONObject object, String option){
+        String url = "";
+        try {
+            url = "https://farm"+object.getString("farm")+".staticflickr.com/"+object.getString("server")+"/"+object.getString("id")+"_"+object.getString("secret")+option+".jpg";
+        } catch (JSONException e) {
+            //e.printStackTrace();
+        }
+        return url;
+    }
+
+    public static String GetOriginalImgUrl(Object jsonObject) {
+        return GetImageUrl((JSONObject) jsonObject, "_b");
+    }
+
     public void Search(String searchKey){
         String searchUrl = GetRequestUrl(searchKey);
         SendStringRequest(searchUrl);
@@ -54,23 +62,11 @@ public class Flickr {
         return gridAdapter.getItem(position);
     }
 
-    public String GetOriginalImgUrl(Object jsonObject) {
-        return GetImageUrl((JSONObject) jsonObject, "_b");
-    }
-
     String GetRequestUrl(String searchKey){
         return "https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key="+apiKey+"&text="+searchKey+"&format=json";
     }
 
-    String GetImageUrl(JSONObject object, String option){
-        String url = "";
-        try {
-            url = "https://farm"+object.getString("farm")+".staticflickr.com/"+object.getString("server")+"/"+object.getString("id")+"_"+object.getString("secret")+option+".jpg";
-        } catch (JSONException e) {
-            //e.printStackTrace();
-        }
-        return url;
-    }
+
 
     void SendStringRequest(String url){
         stringRequest = new StringRequest(Request.Method.GET, url,
@@ -87,7 +83,6 @@ public class Flickr {
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-//                        Log.d(TAG, "onResponse: " + response.substring(14, response.length() - 1));
 
                     }
                 }, new Response.ErrorListener() {
@@ -127,43 +122,8 @@ public class Flickr {
             ImageView imageView = convertView.findViewById(R.id.imageView);
             Log.d(TAG, "getView: downloading");
             new DownloadImageTask(imageView).execute(GetImageUrl((JSONObject) getItem(position), "_s"));
-
-
-//            Uri imageUri = Uri.parse(GetImageUrl((JSONObject) getItem(position), "_n"));
-//            Log.d(TAG, "getView: " + (imageUri==null));
-//            if(imageUri != null)
-//                imageView.setImageURI(imageUri);
-
-//            try {
-//                imageView.setImageURI(Uri.parse(GetImageThumbUrl((JSONObject) getItem(position))));
-//            }catch (Exception e){
-//                e.printStackTrace();
-//            }
             return convertView;
         }
     }
-
-//    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
-//        ImageView bmImage;
-//        public DownloadImageTask(ImageView bmImage) {
-//            this.bmImage = bmImage;
-//        }
-//
-//        protected Bitmap doInBackground(String... urls) {
-//            String urldisplay = urls[0];
-//            Bitmap bmp = null;
-//            try {
-//                InputStream in = new java.net.URL(urldisplay).openStream();
-//                bmp = BitmapFactory.decodeStream(in);
-//            } catch (Exception e) {
-//                Log.e("Error", e.getMessage());
-//                e.printStackTrace();
-//            }
-//            return bmp;
-//        }
-//        protected void onPostExecute(Bitmap result) {
-//            bmImage.setImageBitmap(result);
-//        }
-//    }
 
 }
